@@ -1,22 +1,11 @@
 use crate::error::Error;
-use bytes::Bytes;
 use futures_util::StreamExt;
-use reqwest::{
-    self,
-    header::{HeaderMap, HeaderValue},
-    Client,
-};
+use reqwest::{self, header::USER_AGENT, Client};
 use std::{fs::File, io::Write};
 
 pub trait Download {
     fn init(&mut self, size: u64);
-    fn update(&mut self, chunk: &Bytes);
-}
-
-fn basic_headers() -> HeaderMap<HeaderValue> {
-    let mut headers = HeaderMap::new();
-    headers.append("User-Agent", HeaderValue::from_str("").unwrap());
-    headers
+    fn update(&mut self, chunk: &[u8]);
 }
 
 pub async fn file<D>(url: &str, path: &str, download: &mut D) -> Result<(), Error>
@@ -24,7 +13,7 @@ where
     D: Download,
 {
     let client = Client::new();
-    let response = client.get(url).headers(basic_headers()).send().await?;
+    let response = client.get(url).header(USER_AGENT, "purs").send().await?;
     let size = response.content_length().unwrap_or_default();
 
     let mut file = File::create(&path)?;
