@@ -1,3 +1,5 @@
+//! Used to download file
+
 use crate::error::Error;
 use futures_util::StreamExt;
 use reqwest::{self, header::USER_AGENT, Client};
@@ -25,17 +27,29 @@ pub trait Download {
 /// # Exemples
 /// ```
 /// use purs::downloader::{Download, file};
+/// use std::cmp::min;
 ///
-/// struct Dl;
+/// #[derive(Default)]
+/// struct Dl {
+///     total_size: u64,
+///     download: u64,
+/// };
+///
 /// impl Download for Dl {
-///     fn init(&mut self, size: u64) {}
-///     fn update(&mut self, chunk: &[u8]) {}
+///     fn init(&mut self, size: u64) {
+///         self.total_size = size;
+///     }
+///     
+///     fn update(&mut self, chunk: &[u8]) {
+///         self.download = min(self.download + (chunk.len() as u64), self.total_size);
+///         println!("Total Download: {}", self.download);
+///     }
 /// }
 ///
-///
-/// let url = "https://www.my-api.rs/big/file";
-/// file(url, "path", &mut Dl {}).await;
-///
+/// async fn func() {
+///     let url = "https://www.my-api.rs/big/file";
+///     file(url, "path", &mut Dl::default()).await.unwrap();
+/// }
 /// ```
 pub async fn file<D>(url: &str, path: &str, download: &mut D) -> Result<(), Error>
 where

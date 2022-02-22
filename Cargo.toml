@@ -23,3 +23,6 @@ features = ["derive"]
 version = "1.0.79"
 default-features = false
 features = ["alloc"]
+
+[dev-dependencies]
+tokio-test = "0.4.2"
