@@ -16,9 +16,15 @@ pub fn clear(app_name: &str) -> Result<(), Error> {
 
 /// Return cache path
 pub fn path(app_name: &str) -> Option<String> {
-    Some(format!(
+    let path = format!(
         "{}/{}/purs/",
         dirs::cache_dir()?.as_path().to_str()?,
         app_name
-    ))
+    );
+
+    if !Path::new(&path).exists() {
+        fs::create_dir_all(&path).ok()?;
+    }
+
+    Some(path)
 }
