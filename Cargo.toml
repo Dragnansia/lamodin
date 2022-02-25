@@ -8,6 +8,7 @@ dirs = "4.0.0"
 futures-util = "0.3.21"
 tar = "0.4.38"
 flate2 = "1.0.22"
+async-trait = "0.1.52"
 log = "0.4.14"
 
 [dependencies.reqwest]
