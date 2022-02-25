@@ -4,6 +4,7 @@ use std::{fs, path::Path};
 pub struct Steam {
     pub path: String,
     pub modifier_path: String,
+    pub modifiers: Vec<String>,
 }
 
 impl Steam {
@@ -12,6 +13,7 @@ impl Steam {
         let modifier_path = Steam::ppath(&path)?;
         Ok(Self {
             path,
+            modifiers: Self::all_modifiers(&modifier_path)?,
             modifier_path,
         })
     }
@@ -42,5 +44,28 @@ impl Steam {
 
         fs::create_dir_all(&proton_path)?;
         Ok(proton_path)
+    }
+
+    fn all_modifiers(modifier_path: &String) -> Result<Vec<String>, Error> {
+        let mut array: Vec<String> = Vec::new();
+        for pe in fs::read_dir(modifier_path)? {
+            let pe = pe?;
+            array.push(
+                pe.path()
+                    .file_name()
+                    .ok_or("file name")?
+                    .to_str()
+                    .ok_or("to str")?
+                    .to_string(),
+            );
+        }
+
+        array.sort();
+        array.reverse();
+        Ok(array)
+    }
+
+    pub fn is_installed(&self, version: &String) -> bool {
+        self.modifiers.contains(version)
     }
 }
