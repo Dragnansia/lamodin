@@ -6,7 +6,7 @@ use async_trait::async_trait;
 #[async_trait]
 pub trait Modifier<T, A> {
     /// Install current T version on launcher
-    async fn install<D>(&self, data: A, download: D) -> Result<(), Error>
+    async fn install<D>(&self, data: &A, download: D) -> Result<(), Error>
     where
         D: Download + Send;
 

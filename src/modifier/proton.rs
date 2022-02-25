@@ -30,7 +30,7 @@ pub struct ProtonGE {
 
 #[async_trait]
 impl Modifier<ProtonGE, PAsset> for Steam {
-    async fn install<D>(&self, data: PAsset, mut downloader: D) -> Result<(), Error>
+    async fn install<D>(&self, data: &PAsset, mut downloader: D) -> Result<(), Error>
     where
         D: Download + Send,
     {
