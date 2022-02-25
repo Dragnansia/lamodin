@@ -9,7 +9,7 @@ use reqwest::{blocking::Client, header::USER_AGENT};
 /// # Exemple
 ///
 /// ```
-/// use purs::{api::blocking::version_list, error::Error};
+/// use lamodin::{api::blocking::version_list, error::Error};
 ///
 /// async fn func() -> Result<(), Error> {
 ///     let versions = version_list()?;

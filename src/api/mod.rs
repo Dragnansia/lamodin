@@ -16,7 +16,7 @@ pub const PROTONGE_API_URL: &str =
 /// # Exemple
 ///
 /// ```
-/// use purs::{api::version_list, error::Error};
+/// use lamodin::{api::version_list, error::Error};
 ///
 /// async fn func() -> Result<(), Error> {
 ///     let versions = version_list().await?;

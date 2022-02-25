@@ -8,7 +8,7 @@ use tar::Archive;
 /// # Exemple
 ///
 /// ```
-/// use purs::{archive::install, error::Error};
+/// use lamodin::{archive::install, error::Error};
 ///
 /// fn func() -> Result<(), Error> {
 ///     install("./archive.tar.gz", "new_dir/for_tar")?;

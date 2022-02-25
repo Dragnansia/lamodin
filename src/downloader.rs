@@ -9,7 +9,7 @@ use std::{fs::File, io::Write};
 ///
 /// # Exemple
 /// ```
-/// use purs::downloader::Download;
+/// use lamodin::downloader::Download;
 ///
 /// struct Dl;
 /// impl Download for Dl {
@@ -26,7 +26,7 @@ pub trait Download {
 ///
 /// # Exemples
 /// ```
-/// use purs::downloader::{Download, file};
+/// use lamodin::downloader::{Download, file};
 /// use std::cmp::min;
 ///
 /// #[derive(Default)]
