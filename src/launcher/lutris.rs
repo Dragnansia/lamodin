@@ -25,16 +25,16 @@ impl Lutris {
             .ok_or("err")?
             .to_string();
 
-        let steam_path = format!("{}{}", home_dir, "/.steam/");
+        let steam_path = format!("{}{}", home_dir, "/lutris/");
         if Path::new(&steam_path).exists() {
             Ok(steam_path)
         } else {
-            Err("Can't find any Steam directory".into())
+            Err("Can't find any Lutris directory".into())
         }
     }
 
     fn modifier_path(path: &str) -> Result<String, Error> {
-        let modifier_path = format!("{}root/compatibilitytools.d/", path);
+        let modifier_path = format!("{}runners/wine/", path);
 
         if Path::new(&modifier_path).exists() {
             return Ok(modifier_path);
