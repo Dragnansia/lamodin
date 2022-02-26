@@ -3,16 +3,16 @@ use crate::{
     archive::install,
     downloader::{file, Download},
     error::Error,
-    launcher::steam::Steam,
+    launcher::lutris::Lutris,
 };
 use async_trait::async_trait;
 use reqwest::{blocking::Client, header::USER_AGENT};
 
 const API_RELEASE: &str =
-    "https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases?per_page=100";
+    "https://api.github.com/repos/GloriousEggroll/wine-ge-custom/releases?per_page=100";
 
 #[async_trait]
-impl Modifier<GVersion, GAsset> for Steam {
+impl Modifier<GVersion, GAsset> for Lutris {
     async fn install<D>(&self, data: &GAsset, mut downloader: D) -> Result<(), Error>
     where
         D: Download + Send,
@@ -45,14 +45,4 @@ impl Modifier<GVersion, GAsset> for Steam {
     fn remove(&self, _: GVersion) -> Result<(), Error> {
         todo!()
     }
-}
-
-#[test]
-fn proton_versions() {
-    let steam = Steam::new().unwrap();
-    let versions = steam.versions();
-
-    assert!(versions.is_ok());
-
-    println!("Versions ProtonGE Count: {}", versions.unwrap().len());
 }
