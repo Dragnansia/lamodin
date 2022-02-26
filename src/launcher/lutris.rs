@@ -19,15 +19,15 @@ impl Lutris {
     }
 
     fn path() -> Result<String, Error> {
-        let home_dir = dirs::data_dir()
+        let data_dir = dirs::data_dir()
             .ok_or("Can't find home dir")?
             .to_str()
             .ok_or("err")?
             .to_string();
 
-        let steam_path = format!("{}{}", home_dir, "/lutris/");
-        if Path::new(&steam_path).exists() {
-            Ok(steam_path)
+        let path = format!("{}{}", data_dir, "/lutris/");
+        if Path::new(&path).exists() {
+            Ok(path)
         } else {
             Err("Can't find any Lutris directory".into())
         }
@@ -45,10 +45,10 @@ impl Lutris {
     }
 
     fn all_modifiers(modifier_path: &String) -> Result<Vec<String>, Error> {
-        let mut array: Vec<String> = Vec::new();
+        let mut modifiers: Vec<String> = Vec::new();
         for pe in fs::read_dir(modifier_path)? {
             let pe = pe?;
-            array.push(
+            modifiers.push(
                 pe.path()
                     .file_name()
                     .ok_or("file name")?
@@ -58,9 +58,9 @@ impl Lutris {
             );
         }
 
-        array.sort();
-        array.reverse();
-        Ok(array)
+        modifiers.sort();
+        modifiers.reverse();
+        Ok(modifiers)
     }
 
     pub fn is_installed(&self, version: &String) -> bool {
