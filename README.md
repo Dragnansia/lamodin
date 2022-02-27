@@ -6,4 +6,4 @@ Lamodin is a lib installer for multi modifier (ProtonGE, WineGE, ...) on multi l
 | Launcher | Modifier |
 |----------|----------|
 | Steam    | ProtonGE |
-<!-- | Lutris   | WineGE   | -->
+| Lutris   | WineGE   |
