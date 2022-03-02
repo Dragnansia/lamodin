@@ -29,8 +29,8 @@ pub trait Modifier<T, A> {
         D: Download + Send;
 
     /// Return a list of all
-    fn versions(&self) -> Result<Vec<T>, Error>;
+    async fn versions(&self) -> Result<Vec<T>, Error>;
 
     /// Remove a specifique version of T
-    fn remove(&self, data: T) -> Result<(), Error>;
+    async fn remove(&self, data: T) -> Result<(), Error>;
 }

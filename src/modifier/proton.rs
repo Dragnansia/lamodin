@@ -6,7 +6,7 @@ use crate::{
     launcher::steam::Steam,
 };
 use async_trait::async_trait;
-use reqwest::{blocking::Client, header::USER_AGENT};
+use reqwest::{header::USER_AGENT, Client};
 
 const API_RELEASE: &str =
     "https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases?per_page=100";
@@ -30,29 +30,32 @@ impl Modifier<GVersion, GAsset> for Steam {
         Ok(())
     }
 
-    fn versions(&self) -> Result<Vec<GVersion>, Error> {
+    async fn versions(&self) -> Result<Vec<GVersion>, Error> {
         let client = Client::new();
         let response = client
             .get(API_RELEASE)
             .header(USER_AGENT, "lamodin")
-            .send()?;
-        let text = response.text().unwrap_or_default();
+            .send()
+            .await?;
+        let text = response.text().await.unwrap_or_default();
         let releases: Vec<GVersion> = serde_json::from_str(&text)?;
 
         Ok(releases)
     }
 
-    fn remove(&self, _: GVersion) -> Result<(), Error> {
+    async fn remove(&self, _: GVersion) -> Result<(), Error> {
         todo!()
     }
 }
 
 #[test]
 fn proton_versions() {
-    let steam = Steam::new().unwrap();
-    let versions = steam.versions();
+    tokio_test::block_on(async move {
+        let steam = Steam::new().unwrap();
+        let versions = steam.versions().await;
 
-    assert!(versions.is_ok());
+        assert!(versions.is_ok());
 
-    println!("Versions ProtonGE Count: {}", versions.unwrap().len());
+        println!("Versions ProtonGE Count: {}", versions.unwrap().len());
+    });
 }
