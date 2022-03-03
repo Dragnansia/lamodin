@@ -1,4 +1,4 @@
-use super::{GAsset, GVersion, Modifier};
+use super::Modifier;
 use crate::{
     archive::install,
     downloader::{file, Download},
@@ -7,13 +7,30 @@ use crate::{
 };
 use async_trait::async_trait;
 use reqwest::{header::USER_AGENT, Client};
+use serde::Deserialize;
 
 const API_RELEASE: &str =
     "https://api.github.com/repos/GloriousEggroll/wine-ge-custom/releases?per_page=100";
 
+#[derive(Debug, Deserialize)]
+pub struct WAsset {
+    pub id: i64,
+    pub name: String,
+    pub size: u64,
+    pub browser_download_url: String,
+}
+
+#[derive(Debug, Deserialize, Default)]
+pub struct WVersion {
+    pub tag_name: String,
+    pub name: String,
+    pub prerelease: bool,
+    pub assets: Vec<WAsset>,
+}
+
 #[async_trait]
-impl Modifier<GVersion, GAsset> for Lutris {
-    async fn install<D>(&self, data: &GAsset, mut downloader: D) -> Result<(), Error>
+impl Modifier<WVersion, WAsset> for Lutris {
+    async fn install<D>(&self, data: &WAsset, mut downloader: D) -> Result<(), Error>
     where
         D: Download + Send,
     {
@@ -30,7 +47,7 @@ impl Modifier<GVersion, GAsset> for Lutris {
         Ok(())
     }
 
-    async fn versions(&self) -> Result<Vec<GVersion>, Error> {
+    async fn versions(&self) -> Result<Vec<WVersion>, Error> {
         let client = Client::new();
         let response = client
             .get(API_RELEASE)
@@ -38,12 +55,12 @@ impl Modifier<GVersion, GAsset> for Lutris {
             .send()
             .await?;
         let text = response.text().await.unwrap_or_default();
-        let releases: Vec<GVersion> = serde_json::from_str(&text)?;
+        let releases: Vec<WVersion> = serde_json::from_str(&text)?;
 
         Ok(releases)
     }
 
-    async fn remove(&self, _: GVersion) -> Result<(), Error> {
+    async fn remove(&self, _: WVersion) -> Result<(), Error> {
         todo!()
     }
 }
