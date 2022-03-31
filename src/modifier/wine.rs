@@ -1,4 +1,4 @@
-use super::Modifier;
+use super::ModifierImpl;
 use crate::{
     archive::install,
     downloader::{file, Download},
@@ -29,7 +29,7 @@ pub struct WVersion {
 }
 
 #[async_trait]
-impl Modifier<WVersion, WAsset> for Lutris {
+impl ModifierImpl<WVersion, WAsset> for Lutris {
     async fn install<D>(&self, data: &WAsset, mut downloader: D) -> Result<(), Error>
     where
         D: Download + Send,
@@ -47,7 +47,7 @@ impl Modifier<WVersion, WAsset> for Lutris {
         Ok(())
     }
 
-    async fn versions(&self) -> Result<Vec<WVersion>, Error> {
+    async fn versions() -> Result<Vec<WVersion>, Error> {
         let client = Client::new();
         let response = client
             .get(API_RELEASE)
@@ -61,6 +61,14 @@ impl Modifier<WVersion, WAsset> for Lutris {
     }
 
     async fn remove(&self, _: WVersion) -> Result<(), Error> {
-        todo!()
+        Ok(())
     }
+}
+
+#[test]
+fn proton_versions() {
+    tokio_test::block_on(async move {
+        let versions = Lutris::versions().await;
+        assert!(versions.is_ok());
+    });
 }

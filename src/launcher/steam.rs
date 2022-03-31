@@ -1,10 +1,12 @@
-use crate::error::Error;
+use crate::{error::Error, modifier::Modifier};
 use std::{fs, path::Path};
+
+use super::Launcher;
 
 pub struct Steam {
     pub path: String,
     pub modifier_path: String,
-    pub modifiers: Vec<String>,
+    pub modifiers: Vec<Modifier>,
 }
 
 impl Steam {
@@ -46,26 +48,35 @@ impl Steam {
         Ok(proton_path)
     }
 
-    fn all_modifiers(modifier_path: &String) -> Result<Vec<String>, Error> {
-        let mut array: Vec<String> = Vec::new();
+    fn all_modifiers(modifier_path: &String) -> Result<Vec<Modifier>, Error> {
+        let mut array = vec![];
         for pe in fs::read_dir(modifier_path)? {
             let pe = pe?;
-            array.push(
-                pe.path()
-                    .file_name()
-                    .ok_or("file name")?
-                    .to_str()
-                    .ok_or("to str")?
-                    .to_string(),
-            );
+            let name = pe
+                .path()
+                .file_name()
+                .ok_or("file name")?
+                .to_str()
+                .ok_or("to str")?
+                .to_string();
+
+            let path = pe.path().to_str().ok_or("path name")?.to_string();
+
+            array.push(Modifier { name, path });
         }
 
         array.sort();
         array.reverse();
         Ok(array)
     }
+}
 
-    pub fn is_installed(&self, version: &String) -> bool {
-        self.modifiers.contains(version)
+impl Launcher for Steam {
+    fn containt_version(&self, name: &str) -> bool {
+        self.modifiers.iter().any(|m| m.name.starts_with(name))
+    }
+
+    fn modifiers(&self) -> Vec<Modifier> {
+        self.modifiers.clone()
     }
 }

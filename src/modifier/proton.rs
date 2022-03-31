@@ -1,4 +1,4 @@
-use super::Modifier;
+use super::ModifierImpl;
 use crate::{
     archive::install,
     downloader::{file, Download},
@@ -29,7 +29,7 @@ pub struct PVersion {
 }
 
 #[async_trait]
-impl Modifier<PVersion, PAsset> for Steam {
+impl ModifierImpl<PVersion, PAsset> for Steam {
     async fn install<D>(&self, data: &PAsset, mut downloader: D) -> Result<(), Error>
     where
         D: Download + Send,
@@ -47,7 +47,7 @@ impl Modifier<PVersion, PAsset> for Steam {
         Ok(())
     }
 
-    async fn versions(&self) -> Result<Vec<PVersion>, Error> {
+    async fn versions() -> Result<Vec<PVersion>, Error> {
         let client = Client::new();
         let response = client
             .get(API_RELEASE)
@@ -68,11 +68,7 @@ impl Modifier<PVersion, PAsset> for Steam {
 #[test]
 fn proton_versions() {
     tokio_test::block_on(async move {
-        let steam = Steam::new().unwrap();
-        let versions = steam.versions().await;
-
+        let versions = Steam::versions().await;
         assert!(versions.is_ok());
-
-        println!("Versions ProtonGE Count: {}", versions.unwrap().len());
     });
 }
