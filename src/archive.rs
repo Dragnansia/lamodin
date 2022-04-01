@@ -5,8 +5,7 @@ use tar::Archive;
 
 /// Install archive on the new path
 ///
-/// # Exemple
-///
+/// # Example
 /// ```
 /// use lamodin::{archive::install, error::Error};
 ///

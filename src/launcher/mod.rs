@@ -5,7 +5,7 @@ pub mod steam;
 
 /// Basic function need by all `Launcher`
 ///
-/// # Exemple
+/// # Example
 /// ```
 /// use lamodin::{launcher::Launcher, modifier::Modifier};
 ///

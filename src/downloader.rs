@@ -7,24 +7,33 @@ use std::{fs::File, io::Write};
 
 /// Trait to download file
 ///
-/// # Exemple
+/// # Example
 /// ```
 /// use lamodin::downloader::Download;
 ///
-/// struct Dl;
+/// struct Dl {
+///     total_size: u64,
+/// }
+///
 /// impl Download for Dl {
-///     fn init(&mut self, size: u64) {}
+///     fn init(&mut self, size: u64) {
+///         self.total_size = size;
+///     }
+///
 ///     fn update(&mut self, chunk: &[u8]) {}
 /// }
 /// ```
 pub trait Download {
+    /// Initialize struct with size of download file
     fn init(&mut self, size: u64);
+
+    /// Give Bytes download
     fn update(&mut self, chunk: &[u8]);
 }
 
 /// Download file on path
 ///
-/// # Exemples
+/// # Example
 /// ```
 /// use lamodin::{
 ///     downloader::{Download, file},
@@ -42,7 +51,7 @@ pub trait Download {
 ///     fn init(&mut self, size: u64) {
 ///         self.total_size = size;
 ///     }
-///     
+///
 ///     fn update(&mut self, chunk: &[u8]) {
 ///         self.download = min(self.download + (chunk.len() as u64), self.total_size);
 ///         println!("Total Download: {}", self.download);

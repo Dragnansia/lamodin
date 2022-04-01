@@ -1,3 +1,10 @@
+//! Library to install `Modifier` on a `Launcher`
+//!
+//! | Launcher | Modifier |
+//! |----------|----------|
+//! | Steam    | ProtonGE |
+//! | Lutris   | WineGE   |
+
 pub mod archive;
 pub mod cache;
 pub mod downloader;

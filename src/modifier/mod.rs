@@ -4,7 +4,7 @@ pub mod wine;
 use crate::{downloader::Download, error::Error, launcher::Launcher};
 use async_trait::async_trait;
 
-/// This a basic modifier with juste name and path,
+/// Basic modifier with juste name and path,
 /// to be store on struct with `Launcher` trait impl
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone)]
 pub struct Modifier {
@@ -12,9 +12,9 @@ pub struct Modifier {
     pub path: String,
 }
 
-/// Used to add `Modifier` type for a `Launcher`
+/// Used to add a `Modifier` type for a `Launcher`
 ///
-/// # Exemple
+/// # Example
 /// ```
 /// use lamodin::{
 ///     error::Error,
