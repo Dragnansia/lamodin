@@ -26,7 +26,10 @@ pub trait Download {
 ///
 /// # Exemples
 /// ```
-/// use lamodin::downloader::{Download, file};
+/// use lamodin::{
+///     downloader::{Download, file},
+///     error::Error
+/// };
 /// use std::cmp::min;
 ///
 /// #[derive(Default)]
@@ -46,9 +49,10 @@ pub trait Download {
 ///     }
 /// }
 ///
-/// async fn func() {
+/// async fn func() -> Result<(), Error> {
 ///     let url = "https://www.my-api.rs/big/file";
-///     file(url, "path", &mut Dl::default()).await.unwrap();
+///     file(url, "path", &mut Dl::default()).await?;
+///     Ok(())
 /// }
 /// ```
 pub async fn file<D>(url: &str, path: &str, download: &mut D) -> Result<(), Error>
@@ -57,7 +61,9 @@ where
 {
     let client = Client::new();
     let response = client.get(url).header(USER_AGENT, "purs").send().await?;
-    let size = response.content_length().unwrap_or_default();
+    let size = response
+        .content_length()
+        .ok_or("Can't get content length")?;
 
     let mut file = File::create(&path)?;
     let mut stream = response.bytes_stream();

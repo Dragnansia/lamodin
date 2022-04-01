@@ -1,11 +1,16 @@
+use super::Launcher;
 use crate::{error::Error, modifier::Modifier};
 use std::{fs, path::Path};
 
-use super::Launcher;
-
+/// Steam infos
 pub struct Steam {
+    /// Basic path
     pub path: String,
+
+    /// Modifier path of steam
     pub modifier_path: String,
+
+    /// List of all `Modifier` found on modifier path
     pub modifiers: Vec<Modifier>,
 }
 
@@ -20,7 +25,7 @@ impl Steam {
         })
     }
 
-    // find steam path
+    /// find steam path
     fn fpath() -> Result<String, Error> {
         let home_dir = dirs::home_dir()
             .ok_or("Can't find home dir")?
@@ -36,7 +41,7 @@ impl Steam {
         }
     }
 
-    // Parse steam path to get proton path
+    /// Parse steam path to get proton path
     fn ppath(steam_path: &str) -> Result<String, Error> {
         let proton_path = format!("{}root/compatibilitytools.d/", steam_path);
 
@@ -48,6 +53,7 @@ impl Steam {
         Ok(proton_path)
     }
 
+    /// Find all modifiers
     fn all_modifiers(modifier_path: &String) -> Result<Vec<Modifier>, Error> {
         let mut array = vec![];
         for pe in fs::read_dir(modifier_path)? {
