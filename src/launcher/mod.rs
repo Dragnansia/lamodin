@@ -22,7 +22,7 @@ pub mod steam;
 /// }
 /// ```
 pub trait Launcher {
-    fn containt_version(&self, name: &str) -> bool;
+    fn containt_version(&self, name: &str) -> Option<Modifier>;
 
     fn modifiers(&self) -> Vec<Modifier>;
 }

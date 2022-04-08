@@ -68,8 +68,11 @@ impl Lutris {
 }
 
 impl Launcher for Lutris {
-    fn containt_version(&self, name: &str) -> bool {
-        self.modifiers.iter().any(|m| m.name.starts_with(name))
+    fn containt_version(&self, name: &str) -> Option<Modifier> {
+        self.modifiers
+            .iter()
+            .find(|m| m.name.contains(name))
+            .cloned()
     }
 
     fn modifiers(&self) -> Vec<Modifier> {
